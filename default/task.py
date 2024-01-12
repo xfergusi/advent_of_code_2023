@@ -1,10 +1,10 @@
 def part1():
-    answer = 0
     f = open("input", "r")
     for line in f:
         print(line)
+    answer = 0
 
-
+    
     return answer
 
 def part2():
