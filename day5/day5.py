@@ -8,13 +8,6 @@ def part1():
     for x in seed_list:
         seed_map[x] = []
     
-    seed_to_soil_map = {}
-    soil_to_fertilizer_map = {}
-    fertilizer_to_water_map = {}
-    water_to_light_map = {}
-    light_to_temperature_map = {}
-    temperature_to_humidity_map = {}
-    humidity_to_location_map = {}
     for line in f:
         if "map:" in line:
             we_reached_a_def_line_part_1(f, seed_map)
@@ -50,7 +43,33 @@ def find_map_part_1(input, numbers_list_input):
     return input
 
 def part2():
-    pass
+    f = open("input", "r")
+    first_line = f.readline()
+    seed_map = {}
+
+    seed_list = first_line.split(":")[1].split()
+    for index, seed_num in enumerate(seed_list):
+        if index%2==0:
+            print("oi, me made it here, lol")
+            inset_seeds_into_seed_map(seed_num, seed_list[index+1], seed_map)
+
+
+    
+    for line in f:
+        if "map:" in line:
+            we_reached_a_def_line_part_1(f, seed_map)
+
+    answer = 1000000000
+    for key in seed_map:
+        if seed_map[key][-1] < answer:
+            answer = seed_map[key][-1] 
+    
+    return answer
+
+def inset_seeds_into_seed_map(seed_num, ranger, seed_map):
+    for x in range(int(ranger)):
+        print(x)
+        seed_map[str(int(seed_num)+x)] = []
 
 def main():
     print("part 1 : {} ".format(part1()))
