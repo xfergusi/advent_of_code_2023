@@ -1,6 +1,5 @@
 NOT_FOUND = "NOT_FOUND"
 def part1():
-    answer = 0
     dic = {"five" : [],
            "four" : [],
            "full" : [],
@@ -8,33 +7,47 @@ def part1():
            "two" : [],
            "one" : [],
            "high" : []}
-    f = open("input_x", "r")
+    f = open("input", "r")
+    # f = open("input_x", "r")
     for line in f:
         cards = line.split()[0]
         print(cards)
         if five_of_a_kind_check(cards) != NOT_FOUND:
-            dic["five"].append("{},{}".format(cards, line.split()[1]))
-            print("five found")
+            dic["five"] = add_in_correct_order(dic["five"], "{},{}".format(cards, line.split()[1]))
+            # print("five found")
         elif four_of_a_kind_check(cards) != NOT_FOUND:
-            dic["four"].append("{},{}".format(cards, line.split()[1]))
-            print("four found")
+            # print("four found")
+            dic["four"] = add_in_correct_order(dic["four"], "{},{}".format(cards, line.split()[1]))
         elif full_house_check(cards) != NOT_FOUND:
-            dic["full"].append("{},{}".format(cards, line.split()[1]))
-            print("full house found")
+            dic["full"] = add_in_correct_order(dic["full"], "{},{}".format(cards, line.split()[1]))
+            # print("full house found")
         elif three_of_a_kind_check(cards) != NOT_FOUND:
-            dic["three"].append("{},{}".format(cards, line.split()[1]))
-            print("three found")
+            # print("three found")
+            dic["three"] = add_in_correct_order(dic["three"], "{},{}".format(cards, line.split()[1]))
         elif two_pair_check(cards) != NOT_FOUND:
-            dic["two"].append("{},{}".format(cards, line.split()[1]))
-            print("two pair found")
+            dic["two"] = add_in_correct_order(dic["two"], "{},{}".format(cards, line.split()[1]))
+            # print("two pair found")
         elif one_pair_check(cards) != NOT_FOUND:
-            dic["one"].append("{},{}".format(cards, line.split()[1]))
-            print("one pair found")
+            dic["one"] = add_in_correct_order(dic["one"], "{},{}".format(cards, line.split()[1]))
+            # print("one pair found")
         elif high_card_check(cards) != NOT_FOUND:
-            dic["high"].append("{},{}".format(cards, line.split()[1]))
-            print("high card found")
+            dic["high"] = add_in_correct_order(dic["high"], "{},{}".format(cards, line.split()[1]))
+            # print("high card found")
         print("=============")
-    print(dic)
+    # print(dic)
+    answer = 0
+    kinda_index = 1
+    for section_index, section in enumerate(reversed(dic)):
+        # print(section)
+        if not dic[section]:
+            print("nothing to see here")
+        for part in (dic[section]):
+            point = int(part.split(",")[1])
+            # print("{} + ({} * {}) : cards = {}".format(answer, point, kinda_index, part.split(",")[0]))
+            answer = answer + (point * kinda_index)
+            kinda_index+=1
+        # answer = answer + dic[section]
+    print(answer) 
     return answer
 
 def five_of_a_kind_check(cards):
@@ -100,6 +113,51 @@ def high_card_check(cards):
             high_card_v = cardv
 
     return high_card_v
+
+def return_cards_int_value(card):
+        if card.isnumeric():
+            return int(card)
+        else:
+            if card == "A":
+                return 14
+            elif card == "K":
+                return 13
+            elif card == "Q":
+                return 12
+            elif card == "J":
+                return 11
+            elif card == "T":
+                return 10
+
+def add_in_correct_order(listy, line):
+    # print(type(listy))
+    print("listy before added {}".format(listy))
+    if not listy:
+        return [line]
+    for element_index, element in enumerate(listy):
+        cards = element.split(",")[0]
+        for char_index, char in enumerate(cards): 
+            # print("cards: " + cards)
+            # print("line split: " + line.split(",")[0])
+            if return_cards_int_value(char) > return_cards_int_value(line.split(",")[0][char_index]):
+                print("add ahead")
+                print("listy before insert {}".format(listy))
+                listy.insert(element_index, line)
+                print("listy after insert {}".format(listy))
+                return listy
+            elif return_cards_int_value(char) == return_cards_int_value(line.split(",")[0][char_index]):
+                print("go to the next element")
+            else:
+                print("{} and {} compared".format(char, return_cards_int_value(line.split(",")[0][char_index])))
+                break
+                # print("add behind")
+                # listy.insert(element_index + 1, line)
+                # return listy
+    listy.append(line)
+    print("at the end of the list for {}".format(line))
+    return listy
+
+
 
 def part2():
     pass
